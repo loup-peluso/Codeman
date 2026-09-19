@@ -273,6 +273,15 @@ Object.assign(CodemanApp.prototype, {
       scrollback: scrollback,
       allowTransparency: true,
       allowProposedApi: true,
+      // Without this, macOS composes Option+letter into the OS's dead-key/
+      // special character (Option+P -> "π", Option+1 -> "¡", etc.) and xterm
+      // inserts that literal glyph instead of encoding the chord as Meta.
+      // CLIs running inside the terminal bind Option/Alt combos expecting
+      // Meta encoding (e.g. OMP's Alt+P model switcher, readline's Alt+b/f
+      // word-jump) — this makes xterm emit ESC+<key> for those instead of
+      // the composed character. Costs dead-key composition of accented
+      // characters via Option while a session is focused.
+      macOptionIsMeta: true,
     });
 
     this.fitAddon = new FitAddon.FitAddon();
